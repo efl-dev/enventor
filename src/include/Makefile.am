@@ -20,4 +20,5 @@ EXTRA_DIST = common.h \
 	template_code.h \
 	tools.h \
 	newfile.h \
-	search.h
+	search.h \
+	tooltip_smart.h

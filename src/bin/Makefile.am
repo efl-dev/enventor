@@ -30,7 +30,8 @@ enventor_SOURCES = \
 	search.c \
 	goto.c \
 	newfile.c \
-	globals.c
+	globals.c \
+   tooltip_smart.c
 
 enventor_LDADD = @ENVENTOR_LIBS@
 enventor_LDFLAGS = $(LTLIBINTL)

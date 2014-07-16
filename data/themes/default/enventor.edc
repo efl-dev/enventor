@@ -8,4 +8,5 @@ collections {
    #include "theme_ext.edc"
    #include "layout.edc"
    #include "menu.edc"
+   #include "tooltips.edc"
 }

@@ -3,6 +3,7 @@
 #include <Elementary.h>
 #include <Edje_Edit.h>
 #include "common.h"
+#include "tooltip_smart.h"
 
 typedef struct part_obj_s
 {
@@ -59,7 +60,12 @@ dummy_objs_update(dummy_obj *dummy)
    //Add new part object or Update changed part.
    EINA_LIST_FOREACH(parts, l, part_name)
      {
+        printf("part_name: %s\n", part_name);
         type = edje_edit_part_type_get(dummy->layout, part_name);
+        Evas_Object *tooltip = tooltip_object_add(dummy->layout);
+        tooltip_object_text_set(tooltip,
+                                edje_object_part_object_get(dummy->layout, part_name),
+                                part_name);
 
         if (type == EDJE_PART_TYPE_SWALLOW)
           {
