@@ -83,7 +83,7 @@ indent_insert_br_case(indent_data *id, Evas_Object *entry)
      }
 
    int space = indent_space_get(id, entry);
-   if (space <= 0) return;
+   if (space <= 0) goto end;
 
    //Alloc Empty spaces
    char *p = alloca(space + 1);
@@ -91,6 +91,9 @@ indent_insert_br_case(indent_data *id, Evas_Object *entry)
    p[space] = '\0';
 
    elm_entry_entry_insert(entry, p);
+
+end:
+   free(utf8);
 }
 
 static void
