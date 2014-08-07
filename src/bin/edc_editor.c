@@ -204,7 +204,7 @@ syntax_color_full_update(edit_data *ed, Eina_Bool thread)
 
    if (thread)
      {
-        syntax_color_td *td = malloc(sizeof(syntax_color_td));
+        syntax_color_td *td = calloc(1, sizeof(syntax_color_td));
         td->ed = ed;
         Evas_Object *tb = elm_entry_textblock_get(ed->en_edit);
         td->text = (char *) evas_object_textblock_text_markup_get(tb);
