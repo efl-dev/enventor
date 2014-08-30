@@ -1,6 +1,16 @@
-============
-Enventor 0.3.0
-============
+==============
+Enventor 0.3.2
+==============
+
+Changes since Enventor 0.3.1:
+---------------------------
+Fixes:
+   * Fixed memory leaks in some cases.
+   * Fixed segfault in applying syntax color.
+   * Fixed window title file path to be updated correctly.
+   * Fixed auto completion keyword relative
+   * Fixed auto completion candidation list to be updated correctly.
+   * Fixed dummy object(swallow) was invisible case.
 
 Changes since Enventor 0.2.0:
 ---------------------------
