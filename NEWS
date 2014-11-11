@@ -1,6 +1,12 @@
 ==============
-Enventor 0.4.0
+Enventor 0.4.1
 ==============
+
+Changes since Enventor 0.4.0:
+---------------------------
+
+Fixes:
+   * Fix build package dependency.
 
 Changes since Enventor 0.3.0:
 ---------------------------
