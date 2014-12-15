@@ -736,6 +736,7 @@ main_key_down_cb(void *data, int type EINA_UNUSED, void *ev)
    if (!strcmp(event->key, "F5"))
      {
         config_linenumber_set(!config_linenumber_get());
+        enventor_object_linenumber_set(ad->enventor, config_linenumber_get());
         return ECORE_CALLBACK_DONE;
      }
    //Tools
