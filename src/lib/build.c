@@ -133,10 +133,17 @@ build_edc(void)
         EINA_LOG_ERR("Build Command is not set!");
         return;
      }
+
+#ifdef _WIN32
+   int ret = system(bd->build_cmd);
+   if (ret == -1)
+     EINA_LOG_ERR("error running %s command.", bd->build_cmd);
+#else
    Ecore_Exe_Flags flags =
       (ECORE_EXE_PIPE_READ_LINE_BUFFERED | ECORE_EXE_PIPE_READ |
        ECORE_EXE_PIPE_ERROR_LINE_BUFFERED | ECORE_EXE_PIPE_ERROR);
    ecore_exe_pipe_run(bd->build_cmd, flags, NULL);
+#endif
 }
 
 /*****************************************************************************/
