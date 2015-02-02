@@ -1,6 +1,15 @@
 ==============
-Enventor 0.4.1
+Enventor 0.4.2
 ==============
+
+Changes since Enventor 0.4.1:
+---------------------------
+
+Fixes:
+   * Fix to toggle linenumber properly with Shortcut key(F5)
+   * Fix max value of the mouse_events from 1000 to 1
+   * Fix candidate keyword name "align"
+   * Install missing eo header files
 
 Changes since Enventor 0.4.0:
 ---------------------------
