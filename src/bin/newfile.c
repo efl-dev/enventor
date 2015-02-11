@@ -56,6 +56,12 @@ newfile_set(Evas_Object *enventor, Eina_Bool template_new)
         EINA_LOG_ERR("Cannot find file! \"%s\"", buf);
         return;
      }
+
+   config_edc_path_set(path);
+   Eina_List *list = eina_list_append(NULL, config_edj_path_get());
+   enventor_object_path_set(enventor, ENVENTOR_OUT_EDJ, list);
+   eina_list_free(list);
+
    enventor_object_file_set(enventor, path);
    base_title_set(path);
    file_mgr_reset();
