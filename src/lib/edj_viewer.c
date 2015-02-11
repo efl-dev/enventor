@@ -190,11 +190,24 @@ edj_changed_cb(void *data, int type EINA_UNUSED, void *event)
    if (vd->edj_monitor != ev->monitor) return ECORE_CALLBACK_PASS_ON;
 
    //FIXME: why it need to add monitor again??
-   eio_monitor_del(vd->edj_monitor);
-   vd->edj_monitor = eio_monitor_add(build_edj_path_get());
-   if (!vd->edj_monitor) EINA_LOG_ERR("Failed to add Eio_Monitor!");
-
+//   eio_monitor_del(vd->edj_monitor);
+//   vd->edj_monitor = eio_monitor_add(build_edj_path_get());
+//   if (!vd->edj_monitor) EINA_LOG_ERR("Failed to add Eio_Monitor!");
    vd->edj_reload_need = EINA_TRUE;
+
+   if (!edje_object_file_set(vd->layout, build_edj_path_get(), vd->group_name))
+     {
+        vd->del_cb(vd->data);
+        view_term(vd);
+        EINA_LOG_ERR("Failed to load edj file \"%s\"", build_edj_path_get());
+        return ECORE_CALLBACK_DONE;
+     }
+
+   view_obj_min_update(vd);
+   view_part_highlight_set(vd, vd->part_name);
+   dummy_obj_update(vd->layout);
+
+   vd->edj_reload_need = EINA_FALSE;
 
    return ECORE_CALLBACK_DONE;
 }
@@ -346,7 +359,7 @@ view_init(Evas_Object *enventor, const char *group,
    view_part_highlight_set(vd, NULL);
 
    vd->monitor_event =
-      ecore_event_handler_add(EIO_MONITOR_FILE_MODIFIED, edj_changed_cb, vd);
+      ecore_event_handler_add(EIO_MONITOR_FILE_CREATED, edj_changed_cb, vd);
 
    /* Is this required?? Suddenly, something is changed and
       it won't successful with EIO_MONITOR_FILE_MODIFIED to reload the edj file
