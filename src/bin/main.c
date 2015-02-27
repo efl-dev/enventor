@@ -605,7 +605,19 @@ ctrl_func(app_data *ad, const char *key)
    //Save
    if (!strcmp(key, "s") || !strcmp(key, "S"))
      {
-        file_mgr_edc_save();
+	     config_edc_path_set(config_edc_path_get());
+
+	     Eina_List *list = eina_list_append(NULL, config_edj_path_get());
+	     enventor_object_path_set(ad->enventor, ENVENTOR_OUT_EDJ, list);
+	     eina_list_free(list);
+
+	     if (!enventor_object_save(ad->enventor, config_edc_path_get()))
+	     {
+		     EINA_LOG_ERR("Could not save the file.");
+	     }
+	     enventor_object_file_set(ad->enventor, config_edc_path_get());
+	     file_mgr_reset();
+        //file_mgr_edc_save();
         return ECORE_CALLBACK_DONE;
      }
   //Delete Line
