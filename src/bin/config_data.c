@@ -46,18 +46,7 @@ config_edj_path_update(config_data *cd)
    char buf[PATH_MAX];
    Eina_Tmpstr *tmp_path;
 
-   char *ext = strstr(cd->edc_path, ".edc");
-   const char *file = ecore_file_file_get(cd->edc_path);
-   if (ext && file)
-     {
-        char filename[PATH_MAX];
-        snprintf(filename, (ext - file) + 1, "%s", file);
-        snprintf(buf, sizeof(buf), "%s.edj", filename);
-     }
-   else
-     snprintf(buf, sizeof(buf), "%s.edj", file);
-
-   if (!eina_file_mkstemp(buf, &tmp_path))
+   if (!eina_file_mkstemp(DEFAULT_EDC_FORMAT, &tmp_path))
      {
         EINA_LOG_ERR("Failed to generate tmp folder!");
         return;
