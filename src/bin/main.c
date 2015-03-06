@@ -856,9 +856,6 @@ live_edit_set(Evas_Object *enventor, Evas_Object *tools)
 static Eina_Bool
 init(app_data *ad, int argc, char **argv)
 {
-   ecore_event_handler_add(ECORE_EVENT_KEY_DOWN, main_key_down_cb, ad);
-   ecore_event_handler_add(ECORE_EVENT_KEY_UP, main_key_up_cb, ad);
-   ecore_event_handler_add(ECORE_EVENT_MOUSE_WHEEL, main_mouse_wheel_cb, ad);
 
    elm_setup();
 
@@ -867,6 +864,9 @@ init(app_data *ad, int argc, char **argv)
    Eina_Bool default_edc = config_data_set(ad, argc, argv);
    newfile_default_set(default_edc);
    base_gui_init();
+   ecore_event_handler_add(ECORE_EVENT_KEY_DOWN, main_key_down_cb, ad);
+   ecore_event_handler_add(ECORE_EVENT_KEY_UP, main_key_up_cb, ad);
+   ecore_event_handler_add(ECORE_EVENT_MOUSE_WHEEL, main_mouse_wheel_cb, ad);
    statusbar_set();
    enventor_setup(ad);
    file_mgr_init(ad->enventor);
