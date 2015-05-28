@@ -1,6 +1,13 @@
 ==============
-Enventor 0.5.0
+Enventor 0.5.1
 ==============
+
+Changes since Enventor 0.5.0:
+-----------------------------
+
+Fixes:
+   * Fix the compatibility to eo syntax change.
+   * Fix library initialization count corruption.
 
 Changes since Enventor 0.4.0:
 -----------------------------

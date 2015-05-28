@@ -1,14 +1,14 @@
-[Enventor v0.5.0]
+[Enventor v0.5.1]
  
 This is an EDC editor with some convenient functions. It's brand new and was only started near the begining of June 2013, so expecting it to do everything a mature script editor does is a bit premature, but considering it's young age, it does a lot.
  
  
 [Requirements]
   
-  efl (>= 1.13.0)
-  elementary (>= 1.13.0)
+  efl (>= 1.14.0)
+  elementary (>= 1.14.0)
   
-Please note that some features may not quite function correctly or completely less EFL 1.13. Newer would be better.
+Please note that some features may not quite function correctly or completely less EFL 1.14. Newer would be better.
   
 Please see next sites for more information on these.
  
