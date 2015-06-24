@@ -223,16 +223,14 @@ _enventor_object_evas_object_smart_clip_unset(Evas_Object *obj EINA_UNUSED, Enve
    evas_object_clip_unset(o);
 }
 
-EOLIAN static Eo *
+EOLIAN static void
 _enventor_object_eo_base_constructor(Eo *obj,
                                      Enventor_Object_Data *pd EINA_UNUSED)
 {
-   obj = eo_do_super_ret(obj, MY_CLASS, obj, eo_constructor());
+   eo_do_super(obj, MY_CLASS, eo_constructor());
    eo_do(obj,
          evas_obj_type_set(MY_CLASS_NAME_LEGACY),
          evas_obj_smart_callbacks_descriptions_set(_smart_callbacks));
-
-   return obj;
 }
 
 EOLIAN static Eina_Bool
