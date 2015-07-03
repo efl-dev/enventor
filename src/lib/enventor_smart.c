@@ -26,6 +26,7 @@ typedef struct _Enventor_Object_Data
    Eio_Monitor *edc_monitor;
    Eina_Stringshare *group_name;
    Ecore_Timer *file_modified_timer;
+   Enventor_File_Format file_format;
 
    Eina_Bool dummy_swallow : 1;
 
@@ -269,12 +270,29 @@ _enventor_object_efl_file_file_set(Eo *obj EINA_UNUSED,
                                    const char *group EINA_UNUSED)
 {
    eio_monitor_del(pd->edc_monitor);
-   build_edc_path_set(file);
-   autocomp_target_set(pd->ed);
+
+   if (file)
+     {
+        if (strstr(file, ".edc"))
+          pd->file_format = ENVENTOR_FILE_FORMAT_EDC;
+        else if (strstr(file, ".xml"))
+          pd->file_format = ENVENTOR_FILE_FORMAT_XML;
+     }
+
+   if (pd->file_format == ENVENTOR_FILE_FORMAT_EDC)
+     {
+        build_edc_path_set(file);
+        autocomp_target_set(pd->ed);
+     }
+
    if (!edit_load(pd->ed, file)) goto err;
-   pd->edc_monitor = eio_monitor_add(file);
-   build_edc();
-   edit_changed_set(pd->ed, EINA_FALSE);
+
+   if (pd->file_format == ENVENTOR_FILE_FORMAT_EDC)
+     {
+        pd->edc_monitor = eio_monitor_add(file);
+        build_edc();
+        edit_changed_set(pd->ed, EINA_FALSE);
+     }
 
    return EINA_TRUE;
 

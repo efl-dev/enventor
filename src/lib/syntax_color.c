@@ -621,13 +621,14 @@ color_markup_insert(Eina_Strbuf *strbuf, const char **src, int length, char **cu
    //Found tuple list. Search in detail.
    color_tuple *tuple;
    int len;
-
    EINA_INARRAY_FOREACH(inarray, tuple)
      {
         len = strlen(tuple->key);
         char *p = *cur + len;
         if (!strncmp(*cur, tuple->key, len))
           {
+printf("%s -------------(%s)\n", *cur, tuple->key);
+
              if (p <= (*src + length))
                {
                   if (!symbol &&
@@ -860,6 +861,20 @@ color_apply(color_data *cd, const char *src, int length, char *from, char *to)
                }
           }
 
+        //escape string: " ~ "
+        ret = string_apply(strbuf, &cur, &prev, cd->col_string, inside_string);
+        if (ret == 1)
+          {
+             inside_string = !inside_string;
+             continue;
+          }
+
+        if (inside_string || inside_comment)
+          {
+             cur++;
+             continue;
+          }
+#if 0
         //handle comment: /* ~ */
         ret = comment_apply(strbuf, &src, length, &cur, &prev, cd->col_comment,
                             &inside_comment);
@@ -875,24 +890,10 @@ color_apply(color_data *cd, const char *src, int length, char *from, char *to)
              else if (ret == -1) goto finished;
           }
 
-        //escape string: " ~ "
-        ret = string_apply(strbuf, &cur, &prev, cd->col_string, inside_string);
-        if (ret == 1)
-          {
-             inside_string = !inside_string;
-             continue;
-          }
-
-        if (inside_string || inside_comment)
-          {
-             cur++;
-             continue;
-          }
-
         //handle comment: preprocessors, #
         ret = macro_apply(strbuf, &src, length, &cur, &prev, cd->col_macro, cd);
         if (ret == 1) continue;
-
+#endif
         //apply color markup
         if (!from || (cur >= from))
           {
