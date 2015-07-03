@@ -34,57 +34,57 @@ typedef struct setting_s setting_data;
 static setting_data *g_sd = NULL;
 
 static void
-img_path_entry_update(Evas_Object *entry, Eina_List *edc_img_paths)
+img_path_entry_update(Evas_Object *entry, Eina_List *img_paths)
 {
    elm_entry_entry_set(entry, NULL);
 
    Eina_List *l;
-   char *edc_img_path;
-   EINA_LIST_FOREACH(edc_img_paths, l, edc_img_path)
+   char *img_path;
+   EINA_LIST_FOREACH(img_paths, l, img_path)
      {
-        elm_entry_entry_append(entry, edc_img_path);
+        elm_entry_entry_append(entry, img_path);
         elm_entry_entry_append(entry, ";");
      }
 }
 
 static void
-fnt_path_entry_update(Evas_Object *entry, Eina_List *edc_fnt_paths)
+fnt_path_entry_update(Evas_Object *entry, Eina_List *fnt_paths)
 {
    elm_entry_entry_set(entry, NULL);
 
    Eina_List *l;
-   char *edc_fnt_path;
-   EINA_LIST_FOREACH(edc_fnt_paths, l, edc_fnt_path)
+   char *fnt_path;
+   EINA_LIST_FOREACH(fnt_paths, l, fnt_path)
      {
-        elm_entry_entry_append(entry, edc_fnt_path);
+        elm_entry_entry_append(entry, fnt_path);
         elm_entry_entry_append(entry, ";");
      }
 }
 
 static void
-dat_path_entry_update(Evas_Object *entry, Eina_List *edc_dat_paths)
+dat_path_entry_update(Evas_Object *entry, Eina_List *dat_paths)
 {
    elm_entry_entry_set(entry, NULL);
 
    Eina_List *l;
-   char *edc_dat_path;
-   EINA_LIST_FOREACH(edc_dat_paths, l, edc_dat_path)
+   char *dat_path;
+   EINA_LIST_FOREACH(dat_paths, l, dat_path)
      {
-        elm_entry_entry_append(entry, edc_dat_path);
+        elm_entry_entry_append(entry, dat_path);
         elm_entry_entry_append(entry, ";");
      }
 }
 
 static void
-snd_path_entry_update(Evas_Object *entry, Eina_List *edc_snd_paths)
+snd_path_entry_update(Evas_Object *entry, Eina_List *snd_paths)
 {
    elm_entry_entry_set(entry, NULL);
 
    Eina_List *l;
-   char *edc_snd_path;
-   EINA_LIST_FOREACH(edc_snd_paths, l, edc_snd_path)
+   char *snd_path;
+   EINA_LIST_FOREACH(snd_paths, l, snd_path)
      {
-        elm_entry_entry_append(entry, edc_snd_path);
+        elm_entry_entry_append(entry, snd_path);
         elm_entry_entry_append(entry, ";");
      }
 }
@@ -112,10 +112,10 @@ setting_apply_btn_cb(void *data, Evas_Object *obj EINA_UNUSED,
 {
    setting_data *sd = data;
 
-   config_edc_img_path_set(elm_object_text_get(sd->img_path_entry));
-   config_edc_snd_path_set(elm_object_text_get(sd->snd_path_entry));
-   config_edc_fnt_path_set(elm_object_text_get(sd->fnt_path_entry));
-   config_edc_dat_path_set(elm_object_text_get(sd->dat_path_entry));
+   config_img_path_set(elm_object_text_get(sd->img_path_entry));
+   config_snd_path_set(elm_object_text_get(sd->snd_path_entry));
+   config_fnt_path_set(elm_object_text_get(sd->fnt_path_entry));
+   config_dat_path_set(elm_object_text_get(sd->dat_path_entry));
    config_view_scale_set(elm_slider_value_get(sd->slider_view));
    config_tools_set(elm_check_state_get(sd->toggle_tools));
    config_console_set(elm_check_state_get(sd->toggle_console));
@@ -150,13 +150,13 @@ setting_reset_btn_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
    setting_data *sd = data;
 
    img_path_entry_update(sd->img_path_entry,
-                         (Eina_List *)config_edc_img_path_list_get());
+                         (Eina_List *)config_img_path_list_get());
    snd_path_entry_update(sd->snd_path_entry,
-                         (Eina_List *)config_edc_snd_path_list_get());
+                         (Eina_List *)config_snd_path_list_get());
    fnt_path_entry_update(sd->fnt_path_entry,
-                         (Eina_List *)config_edc_fnt_path_list_get());
+                         (Eina_List *)config_fnt_path_list_get());
    dat_path_entry_update(sd->dat_path_entry,
-                         (Eina_List *)config_edc_dat_path_list_get());
+                         (Eina_List *)config_dat_path_list_get());
 
    elm_slider_value_set(sd->slider_view, (double) config_view_scale_get());
 
@@ -239,7 +239,7 @@ general_layout_create(setting_data *sd, Evas_Object *parent)
    //Image Path Entry
    Evas_Object *img_path_entry = entry_create(layout);
    img_path_entry_update(img_path_entry,
-                         (Eina_List *)config_edc_img_path_list_get());
+                         (Eina_List *)config_img_path_list_get());
    elm_object_focus_set(img_path_entry, EINA_TRUE);
    elm_object_part_content_set(layout, "elm.swallow.img_path_entry",
                                img_path_entry);
@@ -247,20 +247,20 @@ general_layout_create(setting_data *sd, Evas_Object *parent)
    //Sound Path Entry
    Evas_Object *snd_path_entry = entry_create(layout);
    snd_path_entry_update(snd_path_entry,
-                         (Eina_List *)config_edc_snd_path_list_get());
+                         (Eina_List *)config_snd_path_list_get());
    elm_object_part_content_set(layout, "elm.swallow.snd_path_entry",
                                snd_path_entry);
    //Font Path Entry
    Evas_Object *fnt_path_entry = entry_create(layout);
    fnt_path_entry_update(fnt_path_entry,
-                         (Eina_List *)config_edc_fnt_path_list_get());
+                         (Eina_List *)config_fnt_path_list_get());
    elm_object_part_content_set(layout, "elm.swallow.fnt_path_entry",
                                fnt_path_entry);
 
    //Data Path Entry
    Evas_Object *dat_path_entry = entry_create(layout);
    dat_path_entry_update(dat_path_entry,
-                         (Eina_List *)config_edc_dat_path_list_get());
+                         (Eina_List *)config_dat_path_list_get());
    elm_object_part_content_set(layout, "elm.swallow.dat_path_entry",
                                dat_path_entry);
 

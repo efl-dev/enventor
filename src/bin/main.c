@@ -6,6 +6,15 @@
 #include <Eio.h>
 #include "common.h"
 
+typedef enum
+{
+   INPUT_FORMAT_DEFAULT_EDC = 0,
+   INPUT_FORMAT_DEFAULT_XML,
+   INPUT_FORMAT_SPECIFIED_EDC,
+   INPUT_FORMAT_SPECIFIED_XML,
+
+} input_format;
+
 typedef struct app_s
 {
    Evas_Object *enventor;
@@ -56,18 +65,18 @@ enventor_common_setup(Evas_Object *enventor)
    enventor_object_auto_indent_set(enventor, config_auto_indent_get());
    enventor_object_auto_complete_set(enventor, config_auto_complete_get());
 
-   Eina_List *list = eina_list_append(NULL, config_edj_path_get());
+   Eina_List *list = eina_list_append(NULL, config_output_path_get());
    enventor_object_path_set(enventor, ENVENTOR_PATH_TYPE_EDJ, list);
    eina_list_free(list);
 
    enventor_object_path_set(enventor, ENVENTOR_PATH_TYPE_IMAGE,
-                            config_edc_img_path_list_get());
+                            config_img_path_list_get());
    enventor_object_path_set(enventor, ENVENTOR_PATH_TYPE_SOUND,
-                            config_edc_snd_path_list_get());
+                            config_snd_path_list_get());
    enventor_object_path_set(enventor, ENVENTOR_PATH_TYPE_FONT,
-                            config_edc_fnt_path_list_get());
+                            config_fnt_path_list_get());
    enventor_object_path_set(enventor, ENVENTOR_PATH_TYPE_DATA,
-                            config_edc_dat_path_list_get());
+                            config_dat_path_list_get());
 }
 
 static void
@@ -221,11 +230,11 @@ tools_set(Evas_Object *enventor)
    return tools;
 }
 
-static void
-args_dispatch(int argc, char **argv, char *edc_path, char *edj_path,
+static input_format
+args_dispatch(int argc, char **argv, char *input_path, char *output_path,
               Eina_List **img_path, Eina_List **snd_path,
               Eina_List **fnt_path, Eina_List **dat_path,
-              Eina_Bool *default_edc, Eina_Bool *template)
+              Eina_Bool *template)
 {
 
    Eina_List *id = NULL;
@@ -235,6 +244,7 @@ args_dispatch(int argc, char **argv, char *edc_path, char *edj_path,
 
    Eina_Bool quit = EINA_FALSE;
    Eina_Bool help = EINA_FALSE;
+   input_format format = INPUT_FORMAT_DEFAULT_EDC;
 
    //No arguments. set defaults
    if (argc == 1) goto defaults;
@@ -284,12 +294,17 @@ args_dispatch(int argc, char **argv, char *edc_path, char *edj_path,
      {
         if (strstr(argv[i], ".edc"))
           {
-             sprintf(edc_path, "%s", argv[i]);
-             *default_edc = EINA_FALSE;
+             sprintf(input_path, "%s", argv[i]);
+             format = INPUT_FORMAT_SPECIFIED_EDC;
           }
         else if (strstr(argv[i], ".edj"))
           {
-             sprintf(edj_path, "%s", argv[i]);
+             sprintf(output_path, "%s", argv[i]);
+          }
+        else if (strstr(argv[i], ".xml"))
+          {
+             sprintf(input_path, "%s", argv[i]);
+             format = INPUT_FORMAT_SPECIFIED_XML;
           }
      }
 
@@ -302,11 +317,11 @@ args_dispatch(int argc, char **argv, char *edc_path, char *edj_path,
      }
 
 defaults:
-   if (*default_edc)
+   if (format == INPUT_FORMAT_DEFAULT_EDC)
      {
         Eina_Tmpstr *tmp_path;
         eina_file_mkstemp(DEFAULT_EDC_FORMAT, &tmp_path);
-        sprintf(edc_path, "%s", (const char *)tmp_path);
+        sprintf(input_path, "%s", (const char *)tmp_path);
         eina_tmpstr_del(tmp_path);
      }
 
@@ -339,23 +354,46 @@ defaults:
    ecore_getopt_list_free(fd);
    ecore_getopt_list_free(sd);
    ecore_getopt_list_free(dd);
+
+   return format;
 }
 
-static void
-config_data_set(app_data *ad, int argc, char **argv, Eina_Bool *default_edc,
-                Eina_Bool *template)
+static input_format
+config_data_set(app_data *ad, int argc, char **argv, Eina_Bool *template)
 {
-   char edc_path[PATH_MAX] = { 0, };
-   char edj_path[PATH_MAX] = { 0, };
+   char input_path[PATH_MAX] = { 0, };
+   char output_path[PATH_MAX] = { 0, };
    Eina_List *img_path = NULL;
    Eina_List *snd_path = NULL;
    Eina_List *fnt_path = NULL;
    Eina_List *dat_path = NULL;
 
-   args_dispatch(argc, argv, edc_path, edj_path, &img_path, &snd_path,
-                 &fnt_path, &dat_path, default_edc, template);
-   config_init(edc_path, edj_path, img_path, snd_path, fnt_path, dat_path);
+   input_format format = args_dispatch(argc, argv, input_path, output_path,
+                                       &img_path, &snd_path, &fnt_path,
+                                       &dat_path, template);
+
+   //decide file format
+   Enventor_File_Format file_format;
+   switch (format)
+     {
+      case INPUT_FORMAT_DEFAULT_EDC:
+      case INPUT_FORMAT_SPECIFIED_EDC:
+        file_format = ENVENTOR_FILE_FORMAT_EDC;
+        break;
+      case INPUT_FORMAT_DEFAULT_XML:
+      case INPUT_FORMAT_SPECIFIED_XML:
+        file_format = ENVENTOR_FILE_FORMAT_XML;
+        break;
+      default:
+        file_format = ENVENTOR_FILE_FORMAT_EDC;
+        break;
+     }
+
+   config_init(file_format, input_path, output_path, img_path, snd_path,
+               fnt_path, dat_path);
    config_update_cb_set(config_update_cb, ad);
+
+   return format;
 }
 
 static void
@@ -470,7 +508,7 @@ enventor_ctxpopup_changed_cb(void *data, Evas_Object *obj,
         return;
      }
    ad->on_saving = EINA_TRUE;
-   enventor_object_save(obj, config_edc_path_get());
+   enventor_object_save(obj, config_input_path_get());
 }
 
 static void
@@ -481,7 +519,7 @@ enventor_live_view_updated_cb(void *data, Evas_Object *obj,
 
    if (ad->lazy_save && enventor_object_modified_get(obj))
      {
-        enventor_object_save(obj, config_edc_path_get());
+        enventor_object_save(obj, config_input_path_get());
         ad->lazy_save = EINA_FALSE;
      }
    else
@@ -539,10 +577,10 @@ enventor_setup(app_data *ad)
 
    enventor_common_setup(enventor);
 
-   enventor_object_file_set(enventor, config_edc_path_get());
+   enventor_object_file_set(enventor, config_input_path_get());
 
    base_enventor_set(enventor);
-   base_title_set(config_edc_path_get());
+   base_title_set(config_input_path_get());
    base_live_view_set(enventor_object_live_view_get(enventor));
 
    ad->enventor = enventor;
@@ -564,7 +602,7 @@ default_template_insert(app_data *ad)
         char msg[64];
         snprintf(msg, sizeof(msg), "Template code inserted, (%s)", syntax);
         stats_info_msg_update(msg);
-        enventor_object_save(ad->enventor, config_edc_path_get());
+        enventor_object_save(ad->enventor, config_input_path_get());
      }
    else
      {
@@ -834,6 +872,19 @@ live_edit_set(Evas_Object *enventor, Evas_Object *tools)
    live_edit_init(enventor, trigger);
 }
 
+static void
+default_file_set(input_format format)
+{
+   if (format == INPUT_FORMAT_DEFAULT_EDC)
+     {
+        newfile_default_edc_set();
+     }
+   else if (format == INPUT_FORMAT_DEFAULT_XML)
+     {
+        //TODO:
+     }
+}
+
 static Eina_Bool
 init(app_data *ad, int argc, char **argv)
 {
@@ -845,9 +896,8 @@ init(app_data *ad, int argc, char **argv)
    enventor_init(argc, argv);
 
    Eina_Bool template = EINA_FALSE;
-   Eina_Bool default_edc = EINA_TRUE;
-   config_data_set(ad, argc, argv, &default_edc, &template);
-   newfile_default_set(default_edc);
+   input_format format = config_data_set(ad, argc, argv, &template);
+   default_file_set(format);
    base_gui_init();
    statusbar_set();
    enventor_setup(ad);
