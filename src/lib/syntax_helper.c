@@ -11,6 +11,7 @@ struct syntax_helper_s
    indent_data *id;
    Eina_Strbuf *strbuf;
    Ecore_Timer *buf_flush_timer;
+   Enventor_File_Format file_format;
 };
 
 /*****************************************************************************/
@@ -35,7 +36,7 @@ buf_flush_timer_cb(void *data)
 /*****************************************************************************/
 
 syntax_helper *
-syntax_init(void)
+syntax_init(Enventor_File_Format file_format)
 {
    syntax_helper *sh = malloc(sizeof(syntax_helper));
    if (!sh)
@@ -45,8 +46,9 @@ syntax_init(void)
      }
    sh->strbuf = eina_strbuf_new();
    sh->buf_flush_timer = ecore_timer_add(1800, buf_flush_timer_cb, sh);
+   sh->file_format = file_format;
 
-   sh->cd = color_init(sh->strbuf);
+   sh->cd = color_init(sh->strbuf, file_format);
    sh->id = indent_init(sh->strbuf);
 
    return sh;

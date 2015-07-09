@@ -40,6 +40,7 @@ struct syntax_color_s
    int color_cnt;
    Eina_List *macros;
    Ecore_Thread *thread;
+   Enventor_File_Format file_format;
 
    Eina_Bool ready: 1;
 };
@@ -105,10 +106,14 @@ eddc_term(void)
 }
 
 static void
-color_load()
+color_load(Enventor_File_Format file_format)
 {
    char buf[PATH_MAX];
-   snprintf(buf, sizeof(buf), "%s/color/color.eet", elm_app_data_dir_get());
+
+   if (file_format == ENVENTOR_FILE_FORMAT_EDC)
+     snprintf(buf, sizeof(buf), "%s/color/edc.eet", elm_app_data_dir_get());
+   else
+     snprintf(buf, sizeof(buf), "%s/color/xml.eet", elm_app_data_dir_get());
 
    Eet_File *ef = eet_open(buf, EET_FILE_MODE_READ);
    if (ef)
@@ -220,7 +225,7 @@ init_thread_blocking(void *data, Ecore_Thread *thread EINA_UNUSED)
    color_data *cd = data;
 
    eddc_init();
-   color_load();
+   color_load(cd->file_format);
    eddc_term();
    color_table_init(cd);
 
@@ -741,7 +746,7 @@ color_markup_insert(Eina_Strbuf *strbuf, const char **src, int length, char **cu
 /*****************************************************************************/
 
 color_data *
-color_init(Eina_Strbuf *strbuf)
+color_init(Eina_Strbuf *strbuf, Enventor_File_Format file_format)
 {
    color_data *cd = calloc(1, sizeof(color_data));
    if (!cd)
@@ -751,8 +756,8 @@ color_init(Eina_Strbuf *strbuf)
      }
    cd->strbuf = strbuf;
    cd->cachebuf = eina_strbuf_new();
+   cd->file_format = file_format;
    cd->thread = ecore_thread_run(init_thread_blocking, NULL, NULL, cd);
-   cd->macros = NULL;
 
    return cd;
 }

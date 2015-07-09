@@ -87,7 +87,7 @@ void autocomp_reset(void);
 
 
 /* syntax color */
-color_data *color_init(Eina_Strbuf *strbuf);
+color_data *color_init(Eina_Strbuf *strbuf, Enventor_File_Format file_format);
 void color_term(color_data *cd);
 void color_set(color_data *cd, Enventor_Syntax_Color_Type color_type, const char *val);
 const char *color_get(color_data *cd, Enventor_Syntax_Color_Type color_type);
@@ -119,7 +119,7 @@ Eina_Bool parser_state_info_get(Evas_Object *entry, state_info *info);
 
 
 /* syntax helper */
-syntax_helper *syntax_init(void);
+syntax_helper *syntax_init(Enventor_File_Format file_format);
 void syntax_term(syntax_helper *sh);
 color_data *syntax_color_data_get(syntax_helper *sh);
 indent_data *syntax_indent_data_get(syntax_helper *sh);

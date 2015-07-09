@@ -1013,7 +1013,6 @@ edit_init(Evas_Object *enventor)
 {
    srand(time(NULL));
    parser_data *pd = parser_init();
-   syntax_helper *sh = syntax_init();
 
    edit_data *ed = calloc(1, sizeof(edit_data));
    if (!ed)
@@ -1022,7 +1021,6 @@ edit_init(Evas_Object *enventor)
         return NULL;
      }
    ed->pd = pd;
-   ed->sh = sh;
 
    ecore_event_handler_add(ECORE_EVENT_KEY_DOWN, key_down_cb, ed);
    ecore_event_handler_add(ECORE_EVENT_KEY_UP, key_up_cb, ed);
@@ -1223,6 +1221,14 @@ edit_load(edit_data *ed, const char *edc_path)
    Eina_Bool ret = edit_edc_load(ed, edc_path);
    if (ret) edit_changed_set(ed, EINA_TRUE);
    edj_mgr_reload_need_set(EINA_TRUE);
+
+   //Decide File Format
+   Enventor_File_Format file_format;
+   if (strstr(edc_path, ".xml")) file_format = ENVENTOR_FILE_FORMAT_XML;
+   else file_format = ENVENTOR_FILE_FORMAT_EDC;
+   //FIXME: Update file format
+   if (!ed->sh) ed->sh = syntax_init(file_format);
+
    redoundo_clear(ed->rd);
 
    return ret;
