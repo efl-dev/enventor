@@ -386,6 +386,74 @@ comment2_apply(Eina_Strbuf *strbuf, const char **src, int length, char **cur,
 }
 
 static int
+comment3_apply(Eina_Strbuf *strbuf, const char **src, int length, char **cur,
+              char **prev, const Eina_Stringshare *col,
+              Eina_Bool *inside_comment)
+{
+   if (!(*inside_comment))
+     {
+        if ((*cur)[0] != '&') return 0;
+
+        int cmp_size = 7;     //strlen("<!--");
+
+        if (strncmp(*cur, "&lt;!--", cmp_size)) return 0;
+        eina_strbuf_append_length(strbuf, *prev, (*cur - *prev));
+
+        char buf[128];
+        snprintf(buf, sizeof(buf), "<color=#%s>&lt;!--", col);
+        eina_strbuf_append(strbuf, buf);
+
+        *cur += cmp_size;
+
+        if (*cur > (*src + length))
+          {
+             *inside_comment = EINA_TRUE;
+             return -1;
+          }
+
+        *prev = *cur;
+
+        cmp_size = 6;   //strlen("-->");
+        *cur = strstr(*prev, "--&gt;");
+
+        if (*cur)
+          {
+             eina_strbuf_append_length(strbuf, *prev, (*cur - *prev));
+             eina_strbuf_append(strbuf, "--&gt;</color>");
+             *cur += cmp_size;
+             *prev = *cur;
+             return 0;
+          }
+
+        eina_strbuf_append(strbuf, *prev);
+        *prev = *cur;
+
+        *inside_comment = EINA_TRUE;
+        return -1;
+     }
+   else
+     {
+        int cmp_size = 6;   //strlen("-->");
+
+        if ((*cur)[0] != '-') return 0;
+        if (strncmp(*cur, "--&gt;", cmp_size)) return 0;
+
+        eina_strbuf_append_length(strbuf, *prev, (*cur - *prev));
+        eina_strbuf_append(strbuf, "--&gt;</color>");
+
+        *cur += cmp_size;
+        *inside_comment = EINA_FALSE;
+
+        if (*cur > (*src + length)) return -1;
+        *prev = *cur;
+        return 1;
+     }
+
+   return -1;
+}
+
+
+static int
 string_apply(Eina_Strbuf *strbuf, char **cur, char **prev,
              const Eina_Stringshare *col, Eina_Bool inside_string)
 {
@@ -893,6 +961,30 @@ color_apply(color_data *cd, const char *src, int length, char *from, char *to)
              continue;
           }
 
+        //handle comment: /* ~ */
+        ret = comment_apply(strbuf, &src, length, &cur, &prev, cd->col_comment,
+                            &inside_comment);
+        if (ret == 1) continue;
+        else if (ret == -1) goto finished;
+
+        //handle comment: //
+        if (!from || (cur >= from))
+          {
+             ret = comment2_apply(strbuf, &src, length, &cur, &prev,
+                                  cd->col_comment, &inside_comment);
+             if (ret == 1) continue;
+             else if (ret == -1) goto finished;
+          }
+
+        //handle comment: <!-- -->
+        if (!from || (cur >= from))
+          {
+             ret = comment3_apply(strbuf, &src, length, &cur, &prev,
+                                  cd->col_comment, &inside_comment);
+             if (ret == 1) continue;
+             else if (ret == -1) goto finished;
+          }
+
         if (*cur == '<')
           {
              //escape EOL: <br/>
@@ -908,21 +1000,6 @@ color_apply(color_data *cd, const char *src, int length, char *from, char *to)
                   cur += TAB_LEN;
                   continue;
                }
-          }
-
-        //handle comment: /* ~ */
-        ret = comment_apply(strbuf, &src, length, &cur, &prev, cd->col_comment,
-                            &inside_comment);
-        if (ret == 1) continue;
-        else if (ret == -1) goto finished;
-
-        //handle comment: //
-        if (!from || (cur >= from))
-          {
-             ret = comment2_apply(strbuf, &src, length, &cur, &prev,
-                                  cd->col_comment, &inside_comment);
-             if (ret == 1) continue;
-             else if (ret == -1) goto finished;
           }
 
         //handle comment: preprocessors, #

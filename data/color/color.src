@@ -1,5 +1,5 @@
 group "syntax_color_group" struct {
-   value "string" string: "BBBBBB";
+   value "string" string: "CCCCCC";
    value "comment" string: "00B000";
    value "macro" string: "D42A2A";
 	value "count" string: "3";
