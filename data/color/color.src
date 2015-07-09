@@ -29,6 +29,7 @@ group "syntax_color_group" struct {
             value "key" string: "Image";
             value "key" string: "Include";
             value "key" string: "Label";
+            value "key" string: "Layout";
             value "key" string: "List_Item";
             value "key" string: "List";
             value "key" string: "Naviframe_Item";
