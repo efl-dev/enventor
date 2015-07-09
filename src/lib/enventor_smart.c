@@ -271,6 +271,7 @@ _enventor_object_efl_file_file_set(Eo *obj EINA_UNUSED,
 {
    eio_monitor_del(pd->edc_monitor);
 
+   //Decide file format
    if (file)
      {
         if (strstr(file, ".edc"))
@@ -279,20 +280,17 @@ _enventor_object_efl_file_file_set(Eo *obj EINA_UNUSED,
           pd->file_format = ENVENTOR_FILE_FORMAT_XML;
      }
 
-   if (pd->file_format == ENVENTOR_FILE_FORMAT_EDC)
-     {
-        build_edc_path_set(file);
-        autocomp_target_set(pd->ed);
-     }
+   build_edc_path_set(file);
+   autocomp_target_set(pd->ed);
 
-   if (!edit_load(pd->ed, file)) goto err;
+   if (!edit_load(pd->ed, file, pd->file_format)) goto err;
 
    if (pd->file_format == ENVENTOR_FILE_FORMAT_EDC)
      {
         pd->edc_monitor = eio_monitor_add(file);
         build_edc();
-        edit_changed_set(pd->ed, EINA_FALSE);
      }
+   edit_changed_set(pd->ed, EINA_FALSE);
 
    return EINA_TRUE;
 
@@ -626,7 +624,11 @@ _enventor_object_save(Eo *obj EINA_UNUSED, Enventor_Object_Data *pd,
    if (build_edc_path_get() != file) edit_changed_set(pd->ed, EINA_TRUE);
    Eina_Bool saved = edit_save(pd->ed, file);
    //EDC file is newly generated, we need to reload as the input.
-   if (saved && !pd->edc_monitor) enventor_object_file_set(obj, file);
+   if (saved && !pd->edc_monitor)
+     {
+        if (pd->file_format == ENVENTOR_FILE_FORMAT_EDC)
+          enventor_object_file_set(obj, file);
+     }
    return saved;
 }
 

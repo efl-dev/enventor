@@ -1213,7 +1213,8 @@ edit_part_highlight_get(edit_data *ed)
 }
 
 Eina_Bool
-edit_load(edit_data *ed, const char *edc_path)
+edit_load(edit_data *ed, const char *edc_path,
+          Enventor_File_Format file_format)
 {
    parser_cancel(ed->pd);
    elm_entry_entry_set(ed->en_edit, "");
@@ -1221,12 +1222,6 @@ edit_load(edit_data *ed, const char *edc_path)
    Eina_Bool ret = edit_edc_load(ed, edc_path);
    if (ret) edit_changed_set(ed, EINA_TRUE);
    edj_mgr_reload_need_set(EINA_TRUE);
-
-   //Decide File Format
-   Enventor_File_Format file_format;
-   if (strstr(edc_path, ".xml")) file_format = ENVENTOR_FILE_FORMAT_XML;
-   else file_format = ENVENTOR_FILE_FORMAT_EDC;
-   //FIXME: Update file format
 
    //Update syntax help
    if (!ed->sh || syntax_file_format_get(ed->sh) != file_format)

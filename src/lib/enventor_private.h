@@ -254,7 +254,7 @@ void edit_ctxpopup_enabled_set(edit_data *ed, Eina_Bool enabled);
 Eina_Bool edit_ctxpopup_enabled_get(edit_data *ed);
 Eina_Bool edit_ctxpopup_visible_get(edit_data *ed);
 void edit_ctxpopup_dismiss(edit_data *ed);
-Eina_Bool edit_load(edit_data *ed, const char *edc_path);
+Eina_Bool edit_load(edit_data *ed, const char *edc_path, Enventor_File_Format file_format);
 void edit_selection_clear(edit_data *ed);
 Eina_Bool edit_redoundo(edit_data *ed, Eina_Bool undo);
 void edit_disabled_set(edit_data *ed, Eina_Bool disabled);
