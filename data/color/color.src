@@ -1,5 +1,5 @@
 group "syntax_color_group" struct {
-   value "string" string: "FFFFFF";
+   value "string" string: "BBBBBB";
    value "comment" string: "00B000";
    value "macro" string: "D42A2A";
 	value "count" string: "3";
@@ -17,24 +17,81 @@ group "syntax_color_group" struct {
       group "color" struct {
          value "val" string: "2070D0";
          group "keys" list {
-            value "key" string: "_Item";
+            value "key" string: "Bg";
+            value "key" string: "Box";
+            value "key" string: "Button";
+            value "key" string: "Check";
+            value "key" string: "Conformant";
+            value "key" string: "Entry";
+            value "key" string: "Frame";
+            value "key" string: "Grid";
             value "key" string: "Group";
             value "key" string: "Image";
+            value "key" string: "Include";
+            value "key" string: "Label";
             value "key" string: "List_Item";
             value "key" string: "List";
             value "key" string: "Naviframe_Item";
             value "key" string: "Naviframe";
+            value "key" string: "Rect";
+            value "key" string: "Scroller";
+            value "key" string: "Table";
+            value "key" string: "Text";
+            value "key" string: "Toolbar_Item";
+            value "key" string: "Toolbar";
+            value "key" string: "Win";
          }
       }
       group "color" struct {
          value "val" string: "72AAD4";
          group "keys" list {
+            value "key" string: "align_h";
+            value "key" string: "align_v";
+            value "key" string: "alpha";
+            value "key" string: "bg_option";
+            value "key" string: "borderless";
+            value "key" string: "color";
+            value "key" string: "column_span";
+            value "key" string: "column";
+            value "key" string: "direction";
+            value "key" string: "disabled";
+            value "key" string: "ellipsis";
             value "key" string: "event_cb";
+            value "key" string: "expand_h";
+            value "key" string: "expand_v";
+            value "key" string: "fill_h";
+            value "key" string: "fill_v";
+            value "key" string: "fullscreen";
+            value "key" string: "group";
+            value "key" string: "height";
+            value "key" string: "homogeneous";
             value "key" string: "icon";
             value "key" string: "id";
+            value "key" string: "line_wrap";
+            value "key" string: "max_w";
+            value "key" string: "max_h";
+            value "key" string: "min_w";
+            value "key" string: "minx_h";
+            value "key" string: "padding_w";
+            value "key" string: "padding_h";
             value "key" string: "part";
+            value "key" string: "password";
+            value "key" string: "rel1_x";
+            value "key" string: "rel1_y";
+            value "key" string: "rel2_x";
+            value "key" string: "rel2_y";
+            value "key" string: "row_span";
+            value "key" string: "row";
+            value "key" string: "scale";
+            value "key" string: "scrollable";
+            value "key" string: "single_line";
             value "key" string: "src";
+            value "key" string: "style";
             value "key" string: "text";
+            value "key" string: "visible";
+            value "key" string: "weight_h";
+            value "key" string: "weight_v";
+            value "key" string: "width";
             value "key" string: "xmlns";
          }
       }
