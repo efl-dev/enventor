@@ -1,28 +1,16 @@
 group "syntax_color_group" struct {
-   value "string" string: "AAAAAA";
+   value "string" string: "FFFFFF";
    value "comment" string: "00B000";
    value "macro" string: "D42A2A";
+	value "count" string: "3";
    group "colors" array {
-      count 6;
+      count 3;
       group "color" struct {
          value "val" string: "777777";
          group "keys" list {
-            value "key" string: "{";
-            value "key" string: "}";
-            value "key" string: "[";
-            value "key" string: "]";
-            value "key" string: ";";
-            value "key" string: ":";
-            value "key" string: ".";
-            value "key" string: "(";
-            value "key" string: ")";
-            value "key" string: "!";
             value "key" string: "=";
-            value "key" string: "&amp;";
             value "key" string: "&gt;";
             value "key" string: "&lt;";
-            value "key" string: "|";
-            value "key" string: "\\";
             value "key" string: "/";
          }
       }
@@ -48,24 +36,6 @@ group "syntax_color_group" struct {
             value "key" string: "src";
             value "key" string: "text";
             value "key" string: "xmlns";
-         }
-      }
-      group "color" struct {
-         value "val" string: "D4D42A";
-         group "keys" list {
-            value "key" string: "ACCELERATE_FACTOR";
-         }
-      }
-      group "color" struct {
-         value "val" string: "00FFFF";
-         group "keys" list {
-            value "key" string: "anim";
-         }
-      }
-      group "color" struct {
-         value "val" string: "D78700";
-         group "keys" list {
-            value "key" string: "else";
          }
       }
    }
