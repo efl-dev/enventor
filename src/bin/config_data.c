@@ -279,8 +279,7 @@ config_input_path_set(const char *input_path)
 {
    config_data *cd = g_cd;
    eina_stringshare_replace(&cd->input_path, input_path);
-   if (cd->file_format == ENVENTOR_FILE_FORMAT_EDC)
-     config_edj_path_update(cd);
+   config_edj_path_update(cd);
 }
 
 void

@@ -123,6 +123,7 @@ syntax_helper *syntax_init(Enventor_File_Format file_format);
 void syntax_term(syntax_helper *sh);
 color_data *syntax_color_data_get(syntax_helper *sh);
 indent_data *syntax_indent_data_get(syntax_helper *sh);
+Enventor_File_Format syntax_file_format_get(syntax_helper *sh);
 
 
 /* indent */

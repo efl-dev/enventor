@@ -1227,7 +1227,13 @@ edit_load(edit_data *ed, const char *edc_path)
    if (strstr(edc_path, ".xml")) file_format = ENVENTOR_FILE_FORMAT_XML;
    else file_format = ENVENTOR_FILE_FORMAT_EDC;
    //FIXME: Update file format
-   if (!ed->sh) ed->sh = syntax_init(file_format);
+
+   //Update syntax help
+   if (!ed->sh || syntax_file_format_get(ed->sh) != file_format)
+     {
+        if (ed->sh) syntax_term(ed->sh);
+        ed->sh = syntax_init(file_format);
+     }
 
    redoundo_clear(ed->rd);
 

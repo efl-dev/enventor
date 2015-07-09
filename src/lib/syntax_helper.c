@@ -65,6 +65,12 @@ syntax_term(syntax_helper *sh)
    free(sh);
 }
 
+Enventor_File_Format
+syntax_file_format_get(syntax_helper *sh)
+{
+   return sh->file_format;
+}
+
 color_data *
 syntax_color_data_get(syntax_helper *sh)
 {
