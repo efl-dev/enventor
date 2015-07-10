@@ -469,7 +469,7 @@ indent_xml_space_get(indent_data *id, Evas_Object *entry)
    const char *quot = "\"";
    int quot_len = 1; // strlen("&quot;");
    char *cur = (char *) src;
-   char *end = ((char *) src) + pos;
+   char *end = ((char *) src) + pos - 1;
 
    while (cur && (cur <= end))
      {
@@ -503,6 +503,10 @@ indent_xml_space_get(indent_data *id, Evas_Object *entry)
           }
         else cur++;
      }
+
+   /* If current Cursor move back placed in just prior to </xxx>
+      Then we need to depth down one more */
+   if (!strncmp((src + pos), "</", 2)) depth--;
 
    if (depth < 0) depth = 0;
    depth *= TAB_SPACE;
