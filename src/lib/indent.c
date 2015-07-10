@@ -487,6 +487,10 @@ indent_xml_space_get(indent_data *id, Evas_Object *entry)
              depth--;
              cur+=2;
           }
+        else if (!strncmp(cur, "<!", 2))
+          {
+             cur+=2;
+          }
         else if (*cur == '<')
           {
              depth++;
