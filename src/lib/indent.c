@@ -12,10 +12,10 @@ struct indent_s
 };
 
 /*****************************************************************************/
-/* Internal method implementation (EDC)                                      */
+/* Internal method implementation (COMMON)                                   */
 /*****************************************************************************/
 static void
-indent_edc_insert_br_case(indent_data *id, Evas_Object *entry)
+indent_common_insert_br_case(indent_data *id, Evas_Object *entry)
 {
    Evas_Object *tb = elm_entry_textblock_get(entry);
    Evas_Textblock_Cursor *cur = evas_object_textblock_cursor_get(tb);
@@ -54,8 +54,14 @@ indent_edc_insert_br_case(indent_data *id, Evas_Object *entry)
    elm_entry_entry_insert(entry, p);
 }
 
+
+/*****************************************************************************/
+/* Internal method implementation (EDC)                                      */
+/*****************************************************************************/
+
 static void
-indent_edc_insert_bracket_case(indent_data *id, Evas_Object *entry, int cur_line)
+indent_edc_insert_bracket_case(indent_data *id, Evas_Object *entry,
+                               int cur_line)
 {
    Evas_Object *tb = elm_entry_textblock_get(entry);
    Evas_Textblock_Cursor *cur = evas_object_textblock_cursor_new(tb);
@@ -73,7 +79,11 @@ indent_edc_insert_bracket_case(indent_data *id, Evas_Object *entry, int cur_line
      }
 
    int space = indent_space_get(id, entry);
-   if (space == len) return;
+   if (space == len)
+     {
+        free(utf8);
+        return;
+     }
 
    int i = 0;
    if (len > space)
@@ -243,7 +253,7 @@ indent_edc_insert_apply(indent_data *id, Evas_Object *entry, const char *insert,
      {
         if (!strcmp(insert, EOL))
           {
-            indent_edc_insert_br_case(id, entry);
+            indent_common_insert_br_case(id, entry);
             return 1;
           }
         else
@@ -307,7 +317,7 @@ indent_edc_space_get(indent_data *id, Evas_Object *entry)
 {
    //Get the indentation depth
    int pos = elm_entry_cursor_pos_get(entry);
-   if (pos == 0) return 0;
+   if (pos < 1) return 0;
 
    char *src = elm_entry_markup_to_utf8(elm_entry_entry_get(entry));
    if (!src) return 0;
@@ -346,7 +356,156 @@ indent_edc_space_get(indent_data *id, Evas_Object *entry)
 /* Internal method implementation (XML)                                      */
 /*****************************************************************************/
 
+static void
+indent_xml_insert_slash_case(indent_data *id, Evas_Object *entry, int cur_line)
+{
+   Evas_Object *tb = elm_entry_textblock_get(entry);
+   Evas_Textblock_Cursor *cur = evas_object_textblock_cursor_new(tb);
+   evas_textblock_cursor_line_set(cur, cur_line - 1);
+   const char *text = evas_textblock_cursor_paragraph_text_get(cur);
+   char *utf8 = elm_entry_markup_to_utf8(text);
 
+   int len = strlen(utf8) - 1;
+   if (len < 0) return;
+
+   while (len)
+     {
+        if (utf8[len] == '<') break;
+        len--;
+     }
+
+   //Check is it closing case.
+   if (strncmp(utf8 + len, "</", 2))
+     {
+        free(utf8);
+        return;
+     }
+
+   int space = indent_space_get(id, entry);
+   if (space == len)
+     {
+        free(utf8);
+        return;
+     }
+
+   int i = 0;
+   if (len > space)
+     {
+        evas_textblock_cursor_line_char_first(cur);
+
+        while (i < len)
+          {
+             //Guarantee One linear or not.
+             if (utf8[i] != ' ')
+               {
+                  free(utf8);
+                  return;
+               }
+
+             evas_textblock_cursor_char_next(cur);
+             i++;
+          }
+
+        i = 0;
+        while (i < (len - space))
+          {
+             if (utf8[(len - 1) - i] == ' ')
+               {
+                  evas_textblock_cursor_char_prev(cur);
+                  evas_textblock_cursor_char_delete(cur);
+               }
+             else break;
+             i++;
+          }
+     }
+   else
+     {
+        //Alloc Empty spaces
+        space = (space - len);
+        char *p = alloca(space + 1);
+        memset(p, ' ', space);
+        p[space] = '\0';
+        evas_textblock_cursor_text_prepend(cur, p);
+     }
+
+   elm_entry_calc_force(entry);
+   evas_textblock_cursor_free(cur);
+   free(utf8);
+}
+
+static int
+indent_xml_insert_apply(indent_data *id, Evas_Object *entry, const char *insert,
+                        int cur_line)
+{
+   int len = strlen(insert);
+   if (len == GT_LEN)
+     {
+        if (!strncmp(insert, GT, GT_LEN))
+          indent_xml_insert_slash_case(id, entry, cur_line);
+        return 0;
+     }
+   else
+     {
+        if (!strcmp(insert, EOL))
+          {
+             indent_common_insert_br_case(id, entry);
+             return 1;
+          }
+     }
+   return 0;
+}
+
+static int
+indent_xml_space_get(indent_data *id, Evas_Object *entry)
+{
+   //Get the indentation depth
+   int pos = elm_entry_cursor_pos_get(entry);
+   if (pos <= 1) return 0;
+
+   char *src = elm_entry_markup_to_utf8(elm_entry_entry_get(entry));
+   if (!src) return 0;
+
+   int depth = 0;
+   const char *quot = "\"";
+   int quot_len = 1; // strlen("&quot;");
+   char *cur = (char *) src;
+   char *end = ((char *) src) + pos;
+
+   while (cur && (cur <= end))
+     {
+        //Skip "" range
+        if (*cur == *quot)
+          {
+             cur += quot_len;
+             cur = strstr(cur, quot);
+             if (!cur) return depth;
+             cur += quot_len;
+          }
+
+        if (!strncmp(cur, "</", 2))
+          {
+             depth--;
+             cur+=2;
+          }
+        else if (*cur == '<')
+          {
+             depth++;
+             cur++;
+          }
+        else if (!strncmp(cur, "/>", 2))
+          {
+             depth--;
+             cur+=2;
+          }
+        else cur++;
+     }
+
+   if (depth < 0) depth = 0;
+   depth *= TAB_SPACE;
+   free(src);
+
+   return depth;
+}
 
 
 
@@ -379,6 +538,8 @@ indent_space_get(indent_data *id, Evas_Object *entry)
 {
    switch (id->file_format)
      {
+      case ENVENTOR_FILE_FORMAT_XML:
+         return indent_xml_space_get(id, entry);
       default:
          return indent_edc_space_get(id, entry);
      }
@@ -401,6 +562,8 @@ indent_insert_apply(indent_data *id, Evas_Object *entry, const char *insert,
 {
    switch (id->file_format)
      {
+      case ENVENTOR_FILE_FORMAT_XML:
+         return indent_xml_insert_apply(id, entry, insert, cur_line);
       default:
          return indent_edc_insert_apply(id, entry, insert, cur_line);
      }

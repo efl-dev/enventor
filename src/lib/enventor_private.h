@@ -12,6 +12,10 @@
 #define TAB "<tab/>"
 #define TAB_LEN 6
 #define TAB_SPACE 3
+#define GT "&gt;"
+#define GT_LEN 4
+#define LT "&lt;"
+#define LT_LEN 4
 #define REL1_X 0.25f
 #define REL1_Y 0.25f
 #define REL2_X 0.75f
