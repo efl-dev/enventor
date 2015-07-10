@@ -110,10 +110,15 @@ color_load(Enventor_File_Format file_format)
 {
    char buf[PATH_MAX];
 
-   if (file_format == ENVENTOR_FILE_FORMAT_EDC)
-     snprintf(buf, sizeof(buf), "%s/color/edc.eet", elm_app_data_dir_get());
-   else
-     snprintf(buf, sizeof(buf), "%s/color/xml.eet", elm_app_data_dir_get());
+   switch (file_format)
+     {
+      case ENVENTOR_FILE_FORMAT_XML:
+         snprintf(buf, sizeof(buf), "%s/color/xml.eet", elm_app_data_dir_get());
+         break;
+      default:
+         snprintf(buf, sizeof(buf), "%s/color/edc.eet", elm_app_data_dir_get());
+         break;
+     }
 
    Eet_File *ef = eet_open(buf, EET_FILE_MODE_READ);
    if (ef)

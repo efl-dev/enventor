@@ -875,13 +875,16 @@ live_edit_set(Evas_Object *enventor, Evas_Object *tools)
 static void
 default_file_set(input_format format)
 {
-   if (format == INPUT_FORMAT_DEFAULT_EDC)
+   switch (format)
      {
-        newfile_default_edc_set();
-     }
-   else if (format == INPUT_FORMAT_DEFAULT_XML)
-     {
-        //TODO:
+      case INPUT_FORMAT_DEFAULT_EDC:
+         newfile_default_edc_set();
+         break;
+      case INPUT_FORMAT_DEFAULT_XML:
+         //TODO:
+         break;
+      default:
+         break;
      }
 }
 
