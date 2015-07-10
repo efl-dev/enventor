@@ -127,7 +127,7 @@ Enventor_File_Format syntax_file_format_get(syntax_helper *sh);
 
 
 /* indent */
-indent_data *indent_init(Eina_Strbuf *strbuf);
+indent_data *indent_init(Eina_Strbuf *strbuf, Enventor_File_Format file_format);
 void indent_term(indent_data *id);
 int indent_space_get(indent_data *id, Evas_Object *entry);
 int indent_insert_apply(indent_data *id, Evas_Object *entry, const char *insert, int cur_line);

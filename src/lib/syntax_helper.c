@@ -49,7 +49,7 @@ syntax_init(Enventor_File_Format file_format)
    sh->file_format = file_format;
 
    sh->cd = color_init(sh->strbuf, file_format);
-   sh->id = indent_init(sh->strbuf);
+   sh->id = indent_init(sh->strbuf, file_format);
 
    return sh;
 }
