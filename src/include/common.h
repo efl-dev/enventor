@@ -79,5 +79,6 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
 #include "live_edit.h"
 #include "console.h"
 #include "file_mgr.h"
+#include "share.h"
 
 #endif

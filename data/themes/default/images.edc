@@ -19,6 +19,7 @@ images {
    image: "live_text.png" COMP;
    image: "live_textblock.png" COMP;
    image: "live_edit.png" COMP;
+   image: "share.png" COMP;
 }
 
 #define ICON_GROUP(_group_name, _image_path) \
@@ -32,6 +33,7 @@ images {
       } \
    }
 ICON_GROUP("goto", "goto.png")
+ICON_GROUP("share", "share.png")
 ICON_GROUP("menu", "menu.png")
 ICON_GROUP("find", "find.png")
 ICON_GROUP("highlight", "highlight.png")

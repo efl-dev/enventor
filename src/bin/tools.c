@@ -83,6 +83,15 @@ goto_cb(void *data, Evas_Object *obj EINA_UNUSED,
 }
 
 static void
+share_cb(void *data, Evas_Object *obj EINA_UNUSED,
+         void *event_info EINA_UNUSED)
+{
+   Evas_Object *enventor = data;
+   live_edit_cancel();
+   share_open(enventor);
+}
+
+static void
 console_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
            void *event_info EINA_UNUSED)
 {
@@ -227,6 +236,13 @@ tools_init(Evas_Object *parent, Evas_Object *enventor)
 
    btn = tools_btn_create(box, "lines", "Line Numbers (F5)",
                           lines_cb, enventor);
+   evas_object_size_hint_weight_set(btn, 0, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(btn, 0.0, EVAS_HINT_FILL);
+   elm_box_pack_end(box, btn);
+   td->lines_btn = btn;
+
+   btn = tools_btn_create(box, "share", "Share edj file",
+                          share_cb, enventor);
    evas_object_size_hint_weight_set(btn, 0, EVAS_HINT_EXPAND);
    evas_object_size_hint_align_set(btn, 0.0, EVAS_HINT_FILL);
    elm_box_pack_end(box, btn);

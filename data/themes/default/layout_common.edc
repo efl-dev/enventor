@@ -1284,6 +1284,427 @@ group { name: "search_layout";
    }
 }
 
+group { name: "share_success_layout";
+   parts {
+      part { name: "base";
+         type: SPACER;
+         scale: 1;
+         description { state: "default" 0.0;
+            min: 300 140;
+         }
+      }
+      part { name: "left_top_padding";
+         type: SPACER;
+         scale: 1;
+         description { state: "default" 0.0;
+            rel1.to: "base";
+            rel2.to: "base";
+            rel1.relative: 0 0;
+            rel2.relative: 0 0;
+            fixed: 1 1;
+            align: 0 0;
+            min: 5 5;
+         }
+      }
+      part { name: "elm.text.link";
+         type: TEXT;
+         scale: 1;
+         effect: SHADOW BOTTOM;
+         description { state: "default" 0.0;
+            align: 0 0;
+            rel1.to: "left_top_padding";
+            rel2.to: "left_top_padding";
+            rel1.relative: 1 1;
+            rel2.relative: 1 1;
+            text {
+               text: "Link: ";
+               font: FN;
+               size: 11;
+               align: 0 0;
+               min: 1 1;
+               ellipsis: -1;
+            }
+            color:  255 255 255 255;
+            color3: 0 0 0 128;
+            fixed: 1 1;
+         }
+      }
+      swallow { "elm.swallow.copy";
+         desc {
+            align: 1 0.5;
+            rel1.relative: 1 0;
+            rel1.to_x: "base";
+            rel1.to_y: "elm.text.link";
+            rel2.relative: 0 1;
+            rel2.to_x: "right.pad";
+            rel2.to_y: "elm.text.link";
+            aspect: 1 1;
+            aspect_preference: BOTH;
+         }
+      }
+      spacer { "spec.pad";
+         desc {
+            align: 1 0.5;
+            min: 5 5;
+            max: 5 5;
+            rel1.to: "base";
+            rel2.to: "elm.swallow.copy";
+            rel2.relative: 0 1;
+         }
+      }
+      swallow { "elm.swallow.open";
+         desc {
+            align: 1 0.5;
+            rel1.relative: 0 0;
+            rel1.to_x: "base";
+            rel1.to_y: "elm.swallow.copy";
+            rel2.relative: 0 1;
+            rel2.to_x: "spec.pad";
+            rel2.to_y: "elm.swallow.copy";
+            aspect: 1 1;
+            aspect_preference: BOTH;
+         }
+      }
+
+      spacer { "text.pad";
+         desc {
+            fixed: 1 1;
+            max: 5 5;
+            align: 0 0;
+            rel1.to: "elm.text.link";
+            rel2.to: "base";
+            rel1.relative: 0 1;
+         }
+      }
+
+      spacer { "right.pad";
+         desc {
+            fixed: 1 1;
+            max: 5 5;
+            align: 1 0;
+            rel1.to: "base";
+            rel2.to: "base";
+         }
+      }
+
+      part { name: "elm.swallow.entry";
+         type: SWALLOW;
+         scale: 1;
+         description { state: "default" 0.0;
+            rel1.relative: 0 1;
+            rel2.relative: 0 0;
+            rel1.to: "text.pad";
+            rel2.to_y: "button.pad";
+            rel2.to_x: "right.pad";
+            fixed: 1 1;
+         }
+      }
+
+      spacer { "button.pad";
+         desc { "default";
+            min: 5 5;
+            max: 5 5;
+            fixed: 1 1;
+            align: 0.5 1;
+            rel2 {
+               to_x: "base";
+               to_y: "elm.swallow.close";
+               relative: 1 0;
+            }
+            rel1.to: "base";
+         }
+      }
+      swallow { "elm.swallow.close";
+         scale: 1;
+         desc { "default";
+            align: 0.5 1;
+            rel1 {
+               relative: 0 1;
+               to: "base";
+            }
+            rel2.relative: 1 0;
+            rel2.to_x: "base";
+            rel2.to_y: "bottom.pad";
+            min: 75 25;
+            max: 75 25;
+            fixed: 1 1;
+         }
+      }
+      spacer { "bottom.pad"
+         desc {
+            align: 1 1;
+            rel1.to: "base";
+            rel2.to: "base";
+            min: 5 5;
+            max: 5 5;
+         }
+      }
+   }
+}
+
+group { name: "share_error_layout";
+   parts {
+      part { name: "base";
+         type: SPACER;
+         scale: 1;
+         description { state: "default" 0.0;
+            min: 300 140;
+         }
+      }
+      part { name: "left_top_padding";
+         type: SPACER;
+         scale: 1;
+         description { state: "default" 0.0;
+            rel1.to: "base";
+            rel2.to: "base";
+            rel1.relative: 0 0;
+            rel2.relative: 0 0;
+            fixed: 1 1;
+            align: 0 0;
+            min: 5 5;
+         }
+      }
+      part { name: "elm.text.share";
+         type: TEXT;
+         scale: 1;
+         effect: SHADOW BOTTOM;
+         description { state: "default" 0.0;
+            align: 0 0;
+            rel1.to: "left_top_padding";
+            rel2.to: "left_top_padding";
+            rel1.relative: 1 1;
+            rel2.relative: 1 1;
+            text {
+                  text: "Error message: ";
+               font: FN;
+               size: 11;
+               align: 0 0;
+               min: 1 1;
+               ellipsis: -1;
+            }
+            color:  255 255 255 255;
+            color3: 0 0 0 128;
+            fixed: 1 1;
+         }
+      }
+      spacer { "text.pad";
+         desc {
+            fixed: 1 1;
+            max: 5 5;
+            align: 0 0;
+            rel1.to: "elm.text.share";
+            rel2.to: "base";
+            rel1.relative: 0 1;
+         }
+      }
+
+      spacer { "right.pad";
+         desc {
+            fixed: 1 1;
+            max: 5 5;
+            align: 1 0;
+            rel1.to: "base";
+            rel2.to: "base";
+         }
+      }
+
+      part { name: "elm.swallow.entry";
+         type: SWALLOW;
+         scale: 1;
+         description { state: "default" 0.0;
+            rel1.relative: 0 1;
+            min: 50 50;
+            rel2.relative: 0 0;
+            rel1.to: "text.pad";
+            rel2.to_y: "button.pad";
+            rel2.to_x: "right.pad";
+            fixed: 1 1;
+         }
+      }
+
+      spacer { "button.pad";
+            desc { "default";
+               min: 5 5;
+               max: 5 5;
+               fixed: 1 1;
+               align: 0.5 1;
+               rel2 {
+                  to_x: "base";
+                  to_y: "elm.swallow.share";
+                  relative: 1 0;
+               }
+               rel1.to: "base";
+            }
+         }
+         part { name: "elm.swallow.share";
+         type: SWALLOW;
+         scale: 1;
+         description { state: "default" 0.0;
+               rel2 {
+                  relative: 0 0;
+                  to_y: "bottom.pad";
+                  to_x: "button.pad";
+               }
+               rel1.to: "base";
+            min: 75 25;
+            max: 75 25;
+            align: 1 1;
+            fixed: 1 1;
+         }
+      }
+         swallow { "elm.swallow.cancel";
+            scale: 1;
+            desc { "default";
+               align: 0 1;
+               rel1 {
+                  relative: 1 1;
+                  to: "button.pad";
+               }
+               rel2.relative: 1 0;
+               rel2.to_x: "base";
+               rel2.to_y: "bottom.pad";
+               min: 75 25;
+               max: 75 25;
+               fixed: 1 1;
+            }
+         }
+      spacer { "bottom.pad"
+         desc {
+            align: 1 1;
+            rel1.to: "base";
+            rel2.to: "base";
+            min: 5 5;
+            max: 5 5;
+         }
+      }
+
+   }
+}
+
+group { name: "share_base_layout";
+   parts {
+      part { name: "base";
+         type: SPACER;
+         scale: 1;
+         description { state: "default" 0.0;
+            min: 300 100;
+         }
+      }
+      part { name: "left_top_padding";
+         type: SPACER;
+         scale: 1;
+         description { state: "default" 0.0;
+            rel1.relative: 0 0;
+            rel2.relative: 0 0;
+            fixed: 1 1;
+            align: 0 0;
+            min: 5 5;
+         }
+      }
+      part { name: "elm.text.share";
+         type: TEXT;
+         scale: 1;
+         effect: SHADOW BOTTOM;
+         description { state: "default" 0.0;
+            align: 0 0;
+            rel1.to: "left_top_padding";
+            rel2.to: "left_top_padding";
+            rel1.relative: 1 1;
+            rel2.relative: 1 1;
+            text {
+                  text: "Tags: ";
+               font: FN;
+               size: 11;
+               align: 0 0;
+               min: 1 1;
+               ellipsis: -1;
+            }
+            color:  255 255 255 255;
+            color3: 0 0 0 128;
+//            min: 180 20;
+            fixed: 1 1;
+         }
+      }
+      part { name: "elm.swallow.tags";
+         type: SWALLOW;
+         scale: 1;
+         description { state: "default" 0.0;
+            rel1.relative: 1 0;
+            rel2.relative: 1 0;
+            rel1.to: "elm.text.share";
+            rel2.to_y: "bottom.pad";
+            rel2.offset: -5 -1;
+            fixed: 1 1;
+         }
+      }
+      part { name: "elm.text.msg";
+         type: TEXT;
+         scale: 1;
+         effect: GLOW;
+         description { state: "default" 0.0;
+            align: 0 0;
+            rel1.to: "elm.text.share";
+            rel2.to: "elm.text.share";
+            rel1.relative: 0 1;
+            rel2.relative: 0 1;
+            rel1.offset: 0 10;
+            text {
+               font: FN;
+               size: 10;
+               align: 0 0.5;
+            }
+            color:  51 153 255 255;
+               color3: 51 153 255 18;
+               color2: 51 153 255 24;
+            min: 180 30;
+            fixed: 1 1;
+         }
+      }
+			
+         spacer { "bottom.pad";
+            desc { "default";
+               min: 5 5;
+               max: 5 5;
+               fixed: 1 1;
+               align: 0.5 1;
+               rel2 {
+                  to_y: "elm.swallow.share";
+                  relative: 1 0;
+               }
+            }
+            
+         }
+         part { name: "elm.swallow.share";
+         type: SWALLOW;
+         scale: 1;
+         description { state: "default" 0.0;
+               rel2 {
+                  relative: 0 1;
+                  to_x: "bottom.pad";
+               }
+            min: 75 25;
+            max: 75 25;
+            align: 1 1;
+            fixed: 1 1;
+         }
+      }
+         swallow { "elm.swallow.cancel";
+            scale: 1;
+            desc { "default";
+               align: 0 1;
+               rel1 {
+                  relative: 1 1;
+                  to: "bottom.pad";
+               }
+               min: 75 25;
+               max: 75 25;
+               fixed: 1 1;
+               
+            }
+         }
+   }
+}
+
 group { name: "live_edit_layout";
    data.item: "ctrl_size" "8";
    parts {

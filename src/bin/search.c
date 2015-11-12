@@ -325,6 +325,7 @@ search_open(Evas_Object *enventor)
    }
 
    goto_close();
+   share_close();
 
    sd = calloc(1, sizeof(search_data));
    if (!sd)

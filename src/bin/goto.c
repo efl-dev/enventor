@@ -125,6 +125,7 @@ goto_open(Evas_Object *enventor)
    }
 
    search_close();
+   share_close();
 
    gd = calloc(1, sizeof(goto_data));
    if (!gd)
