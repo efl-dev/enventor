@@ -1612,7 +1612,7 @@ group { name: "share_base_layout";
             rel1.relative: 1 1;
             rel2.relative: 1 1;
             text {
-                  text: "Tags: ";
+               text: "Tags: ";
                font: FN;
                size: 11;
                align: 0 0;
@@ -1621,7 +1621,6 @@ group { name: "share_base_layout";
             }
             color:  255 255 255 255;
             color3: 0 0 0 128;
-//            min: 180 20;
             fixed: 1 1;
          }
       }
@@ -1632,7 +1631,7 @@ group { name: "share_base_layout";
             rel1.relative: 1 0;
             rel2.relative: 1 0;
             rel1.to: "elm.text.share";
-            rel2.to_y: "bottom.pad";
+            rel2.to_y: "button.pad";
             rel2.offset: -5 -1;
             fixed: 1 1;
          }
@@ -1654,54 +1653,66 @@ group { name: "share_base_layout";
                align: 0 0.5;
             }
             color:  51 153 255 255;
-               color3: 51 153 255 18;
-               color2: 51 153 255 24;
+            color3: 51 153 255 18;
+            color2: 51 153 255 24;
             min: 180 30;
             fixed: 1 1;
          }
       }
-			
-         spacer { "bottom.pad";
-            desc { "default";
-               min: 5 5;
-               max: 5 5;
-               fixed: 1 1;
-               align: 0.5 1;
-               rel2 {
-                  to_y: "elm.swallow.share";
-                  relative: 1 0;
-               }
+
+      spacer { "button.pad";
+         desc { "default";
+            min: 5 5;
+            max: 5 5;
+            fixed: 1 1;
+            align: 0.5 1;
+            rel2 {
+               to_y: "elm.swallow.share";
+               relative: 1 0;
             }
-            
          }
-         part { name: "elm.swallow.share";
+
+      }
+      part { name: "elm.swallow.share";
          type: SWALLOW;
          scale: 1;
          description { state: "default" 0.0;
-               rel2 {
-                  relative: 0 1;
-                  to_x: "bottom.pad";
-               }
+            rel2 {
+               relative: 0 0;
+               to_x: "button.pad";
+               to_y: "bottom.pad";
+            }
             min: 75 25;
             max: 75 25;
             align: 1 1;
             fixed: 1 1;
          }
       }
-         swallow { "elm.swallow.cancel";
-            scale: 1;
-            desc { "default";
-               align: 0 1;
-               rel1 {
-                  relative: 1 1;
-                  to: "bottom.pad";
-               }
-               min: 75 25;
-               max: 75 25;
-               fixed: 1 1;
-               
+      swallow { "elm.swallow.cancel";
+         scale: 1;
+         desc { "default";
+            align: 0 1;
+            rel1 {
+               relative: 1 1;
+               to: "button.pad";
             }
+            rel2.relative: 1 0;
+            rel2.to_y: "bottom.pad";
+            min: 75 25;
+            max: 75 25;
+            fixed: 1 1;
+
          }
+      }
+      spacer { "bottom.pad"
+         desc {
+            align: 1 1;
+            rel1.to: "base";
+            rel2.to: "base";
+            min: 5 5;
+            max: 5 5;
+         }
+      }
    }
 }
 
