@@ -1,6 +1,12 @@
 ==============
-Enventor 0.8.0
+Enventor 0.8.1
 ==============
+
+Changes since Enventor 0.8.0:
+-----------------------------
+
+Fixes:
+   * Fix package build issue.
 
 Changes since Enventor 0.7.0:
 -----------------------------
