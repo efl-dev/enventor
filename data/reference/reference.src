@@ -106,6 +106,200 @@ collections { "The <hilight>collections</hilight> represents a theme.</br>The <h
             cursor_mode { "Sets where to draw the (blinking) cursor for textblock parts.</br>The available modes are UNDER and BEFORE.";
             }
             desc { "The <hilight>desc</hilight> defines a state of a part.</br>The <hilight>desc</hilight> block contains properties of a part such as size, position, color, image and text.";
+               align { "Moves the object relatively along both axis inside its container.</br>For horizontal alignment, 0.0 moves the object to touch the left edge of its container and 1.0 moves the object to touch the right edge of its container.</br>For vertical alignment, 0.0 moves the object to touch the top edge of its container and 1.0 moves the object to touch the bottom edge of its container.</br>The default value is 0.5 0.5.";
+               }
+               aspect { "Forces the ratio of the width to height to be kept between the minimum and maximum set.</br>For example, 1.0 1.0 increases the width a pixel for every pixel added to height and 2.0 2.0 increases the width two pixels for every pixel added to height.</br>The default value is 0.0 0.0 which disables <hilight>aspect</hilight>.";
+               }
+               aspect_preference { "Sets the dimensions to which the <hilight>aspect</hilight> property applies.</br>For example, if the dimension is HORIZONTAL, then the object fits its width to its container's width so its height can be longer than its container's height.</br>Available options are BOTH, VERTICAL, HORIZONTAL, SOURCE, and NONE.";
+               }
+               box { "On a box part, the <hilight>box</hilight> block is used to define how items are displayed inside of the box part.";
+                  align { "Moves items relatively along both axis inside the box.</br>For horizontal alignment, 0.0 moves items to touch the left edge of the box and 1.0 moves items to touch the right edge of the box.</br>For vertical alignment, 0.0 moves items to touch the top edge of the box and 1.0 moves items to touch the bottom edge of the box.</br>The default value is 0.5 0.5.";
+                  }
+                  layout { "Sets how the items are arranged in the box.</br>The available layouts are horizontal (default), vertical, horizontal_homogeneous, vertical_homogeneous, horizontal_max, vertical_max, horizontal_flow, vertical_flow, and stack.";
+                  }
+                  min { "When any of the parameters is enabled (1) it forces the minimum size of the box to be equal to the minimum size of the items.</br>The default value is 0 0.";
+                  }
+                  padding { "Sets the padding in pixels between items of the box.</br>The default value is 0 0.";
+                  }
+               }
+               clip_to { "Only renders the area of the part that coincides with the given part.";
+               }
+               color { "Sets the main color to the specified values in RGBA (between 0 and 255).</br>Notice that the <hilight>color</hilight> of the textblock part is set in the text style.";
+               }
+               color2 { "Sets the text outline color to the specified values in RGBA (0 to 255).</br>Notice that <hilight>color2</hilight> is valid only for the text part with the outline effect.</br>Notice that the <hilight>color2</hilight> of the textblock part is set in the text style.";
+               }
+               color3 { "Sets the text shadow color to the specified values in RGBA (0 to 255).</br>Notice that <hilight>color3</hilight> is valid only for the text part with the shadow effect.</br>Notice that the <hilight>color3</hilight> of the textblock part is set in the text style.";
+               }
+               color_class { "The part uses the color values of the named color_class, these values can be overridden by the <hilight>color</hilight>, <hilight>color2</hilight>, and <hilight>color3</hilight> properties.";
+               }
+               fill { "Sets how the image is going to fill the image part.";
+                  origin { "Sets the starting point of the image relatively to the image part.";
+                     offset { "Sets the starting point of the image in pixels from the top-left of the image part.</br>For example, 50 50 fills the image from 50 pixels right and 50 pixels down from the top-left point of the image part.";
+                     }
+                     relative { "Sets the starting point of the image relatively from the top-left of the image part.</br>For example, 0.1 0.1 fills the image from the 0.1 0.1 relative position of the image part.";
+                     }
+                  }
+                  size { "Sets the tile size.";
+                     offset { "Increases the tile size in pixels along each axis.</br>For example, 50 50 increases the tile size by 50 pixels along x and y axis.";
+                     }
+                     relative { "Sets the tile size relatively to the image size.</br>For example, 0.5 0.5 shrinks the tile size to 1/4 of the image size.";
+                     }
+                  }
+                  smooth { "Specifies whether the smooth scaling is applied to the image when the image is scaled.</br>The default value is 1 (enabled).";
+                  }
+                  type { "Spicifies whether the image is scaled or tiled to fill the image part.</br>The available types are SCALE (default) and TILE.";
+                  }
+               }
+               fixed { "Specifies whether the minimum size of this part affects the minimum size of the widget (group).</br>Normally, <hilight>fixed</hilight> is used to set a minimum width or height to a line or a point shaped part.</br>For example, rel1 and rel2 of a part are the same position along x axis and the part has a minimum width, then fixed: 1 0 should be applied not to increase the minimum width of the widget infinitely.</br>The default value is 0 0 (the minimum size of the part affects the minimum size of the widget).";
+               }
+               image { "On an image part, the <hilight>image</hilight> block is used to define how the image is displayed.";
+                  border { "Sets the area (in pixels) of each side of the image (left, right, top, and bottom) which is displayed as a fixed size border from the side.</br>The border area is not resized when the image is resized to fill the image part.";
+                  }
+                  border_scale { "Specifies whether the border is scaled by the object/global scale factors.";
+                  }
+                  border_scale_by { "If border scaling is enabled then normally the OUTPUT border sizes (e.g. if 3 pixels on the left edge are set as a border, then normally at scale 1.0, those 3 columns are always exactly 3 columns of output, or at scale 2.0 they are 6 columns, or 0.33 they merge into a single column).</br>This property multiplies the input scale factor by this multiplier, allowing the creation of supersampled borders to make higher resolution outputs possible by always using the highest resolution artwork and then runtime scaling it down.</br>Value can be: 0.0 or bigger (0.0 or 1.0 to turn it off).";
+                  }
+                  middle {
+                  }
+                  normal {
+                  }
+                  scale_hint {
+                  }
+                  tween {
+                  }
+               }
+               inherit {
+               }
+               limit {
+               }
+               link {
+                  after {
+                  }
+                  base {
+                  }
+                  in {
+                  }
+                  transition {
+                  }
+               }
+               map {
+                  alpha {
+                  }
+                  backface_cull {
+                  }
+                  color {
+                  }
+                  light {
+                  }
+                  on {
+                  }
+                  perspective {
+                  }
+                  perspective_on {
+                  }
+                  rotation {
+                     center {
+                     }
+                     x {
+                     }
+                     y {
+                     }
+                     z {
+                     }
+                  }
+                  smooth {
+                  }
+               }
+               max {
+               }
+               min {
+               }
+               minmul {
+               }
+               perspective {
+                  focal {
+                  }
+                  zplane {
+                  }
+               }
+               proxy {
+                  source_clip {
+                  }
+                  source_visible {
+                  }
+               }
+               rel1 {
+                  offset {
+                  }
+                  relative {
+                  }
+                  to {
+                  }
+                  to_x {
+                  }
+                  to_y {
+                  }
+               }
+               rel2 {
+                  offset {
+                  }
+                  relative {
+                  }
+                  to {
+                  }
+                  to_x {
+                  }
+                  to_y {
+                  }
+               }
+               source {
+               }
+               step {
+               }
+               table {
+                  align {
+                  }
+                  homogeneous {
+                  }
+                  min {
+                  }
+                  padding {
+                  }
+               }
+               text {
+                  align {
+                  }
+                  domain {
+                  }
+                  ellipsis {
+                  }
+                  fit {
+                  }
+                  font {
+                  }
+                  max {
+                  }
+                  min {
+                  }
+                  repch {
+                  }
+                  size {
+                  }
+                  size_range {
+                  }
+                  source {
+                  }
+                  style {
+                  }
+                  text {
+                  }
+                  text_class {
+                  }
+                  text_source {
+                  }
+               }
+               visible {
+               }
             }
             dragable { "When this block is used the part can be dragged around the interface, do not confuse with external drag and drop.</br>By default Edje (and most applications) attempts to use the minimal size possible for a draggable part.</br>If the min property is not set in the description the part is (most likely) set to 0px width and 0px height, thus invisible.";
                confine { "Limits the movement of the dragged part to another part's container.</br>Set a min size for the part, or the dragged object will not show up.";
