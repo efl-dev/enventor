@@ -378,12 +378,15 @@ calc_relative_info(live_data *ld)
    enventor_object_live_view_size_get(base_enventor_get(), &vw, &vh);
 
    //Calculate real min size of Live Edit Item base on current relative
+   double base_scale = enventor_object_base_scale_get(base_enventor_get());
    Evas_Coord min_w =
       (Evas_Coord) round(((double) vw) *
-                         (ld->rel_info.rel2_x - ld->rel_info.rel1_x));
+                         (ld->rel_info.rel2_x - ld->rel_info.rel1_x) *
+                         base_scale);
    Evas_Coord min_h =
       (Evas_Coord) round(((double) vh) *
-                         (ld->rel_info.rel2_y - ld->rel_info.rel1_y));
+                         (ld->rel_info.rel2_y - ld->rel_info.rel1_y) *
+                         base_scale);
 
    //Set fixed properties of width for current Live Edit Item
    if (fixed_w)
@@ -2337,6 +2340,106 @@ live_edit_tools_create(Evas_Object *parent)
    return btn_list;
 }
 
+static void
+fixed_w_check_changed_cb(void *data, Evas_Object *obj,
+                         void *event_info EINA_UNUSED)
+{
+   live_data *ld = data;
+
+   Evas_Coord x, y, w, h;
+   evas_object_geometry_get(ld->layout, &x, &y, &w, &h);
+
+   Evas_Coord vx, vw;
+   Evas_Object *view = view_obj_get(ld);
+   evas_object_geometry_get(view, &vx, NULL, &vw, NULL);
+
+
+   //Update width based on base scale.
+   double base_scale = enventor_object_base_scale_get(base_enventor_get());
+   Evas_Coord new_w;
+
+   if (elm_check_state_get(obj))
+     new_w = (Evas_Coord) round(w / base_scale); //Apply base scale.
+   else
+     new_w = (Evas_Coord) round(w * base_scale); //Revert applying base scale.
+
+   evas_object_resize(ld->layout, new_w, h);
+
+
+   //Update x position based on base scale.
+   double diff_w = (w - new_w) / 2.0;
+   Evas_Coord new_x = (Evas_Coord) round(x + diff_w);
+
+   //limit to live view boundary
+   if (vx > new_x) new_x = vx;
+   if ((new_x + new_w) > (vx + vw)) new_x = (vx + vw) - new_w;
+
+   evas_object_move(ld->layout, new_x, y);
+
+
+   //Update relative position values.
+   ld->rel_info.rel1_x += (diff_w / vw);
+   ld->rel_info.rel2_x -= (diff_w / vw);
+
+   //Round off in the end to reduce round-off error.
+   ld->rel_info.rel1_x = ROUNDING(ld->rel_info.rel1_x, 2);
+   ld->rel_info.rel2_x = ROUNDING(ld->rel_info.rel2_x, 2);
+
+   ctrl_pt_update(ld);
+   info_text_update(ld);
+   align_line_update(ld);
+}
+
+static void
+fixed_h_check_changed_cb(void *data, Evas_Object *obj,
+                         void *event_info EINA_UNUSED)
+{
+   live_data *ld = data;
+
+   Evas_Coord x, y, w, h;
+   evas_object_geometry_get(ld->layout, &x, &y, &w, &h);
+
+   Evas_Coord vy, vh;
+   Evas_Object *view = view_obj_get(ld);
+   evas_object_geometry_get(view, NULL, &vy, NULL, &vh);
+
+
+   //Update height based on base scale.
+   double base_scale = enventor_object_base_scale_get(base_enventor_get());
+   Evas_Coord new_h;
+
+   if (elm_check_state_get(obj))
+     new_h = (Evas_Coord) round(h / base_scale); //Apply base scale.
+   else
+     new_h = (Evas_Coord) round(h * base_scale); //Revert applying base scale.
+
+   evas_object_resize(ld->layout, w, new_h);
+
+
+   //Update y position based on base scale.
+   double diff_h = (h - new_h) / 2.0;
+   Evas_Coord new_y = (Evas_Coord) round(y + diff_h);
+
+   //limit to live view boundary
+   if (vy > new_y) new_y = vy;
+   if ((new_y + new_h) > (vy + vh)) new_y = (vy + vh) - new_h;
+
+   evas_object_move(ld->layout, x, new_y);
+
+
+   //Update relative position values.
+   ld->rel_info.rel1_y += (diff_h / vh);
+   ld->rel_info.rel2_y -= (diff_h / vh);
+
+   //Round off in the end to reduce round-off error.
+   ld->rel_info.rel1_y = ROUNDING(ld->rel_info.rel1_y, 2);
+   ld->rel_info.rel2_y = ROUNDING(ld->rel_info.rel2_y, 2);
+
+   ctrl_pt_update(ld);
+   info_text_update(ld);
+   align_line_update(ld);
+}
+
 Evas_Object *
 live_edit_init(Evas_Object *parent)
 {
@@ -2362,6 +2465,8 @@ live_edit_init(Evas_Object *parent)
                                "When you check Fixed width, width of a new<br>"
                                "part won't be resizable but it will stick a<br>"
                                "fixed size.");
+   evas_object_smart_callback_add(fixed_w_check, "changed",
+                                  fixed_w_check_changed_cb, ld);
    evas_object_show(fixed_w_check);
    elm_box_pack_end(fixed_box, fixed_w_check);
 
@@ -2373,6 +2478,8 @@ live_edit_init(Evas_Object *parent)
                                "When you check Fixed height, height of a<br>"
                                "new part won't be resizable but it will<br>"
                                "stick a fixed size.");
+   evas_object_smart_callback_add(fixed_h_check, "changed",
+                                  fixed_h_check_changed_cb, ld);
    evas_object_show(fixed_h_check);
    elm_box_pack_end(fixed_box, fixed_h_check);
 
