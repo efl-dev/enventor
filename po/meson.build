@@ -13,5 +13,6 @@ if get_option('nls')
             '--from-code=UTF-8',
             '--foreign-user'
             ])
-  config_h.set('ENABLE_NLS', '1')
+  config_h.set('HAVE_GETTEXT', '1')
+  dep_intl = cc.find_library('intl', required : false)
 endif

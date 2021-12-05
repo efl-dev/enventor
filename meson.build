@@ -118,9 +118,7 @@ subdir('data/sounds')
 subdir('data/templates')
 subdir('data/themes/default')
 subdir('pc')
-if have_nls == true
-  subdir('po')
-endif
+subdir('po')
 
 install_data(
   sources     : 'README',
